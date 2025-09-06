@@ -1,0 +1,8 @@
+{
+  "name": "web_read",
+  "side_effects": "reads_network_only",
+  "policy_tags": [
+    "tier:a",
+    "low_risk"
+  ]
+}

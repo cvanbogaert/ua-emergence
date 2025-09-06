@@ -1,0 +1,14 @@
+budgets:
+  per_intent_usd_hard: 3.00
+  per_intent_usd_warn: 2.50
+  monthly_usd_hard: 20.00
+safety:
+  allow_net_read: true
+  allow_net_write: false
+  allow_code_exec: true
+  allow_cloud_apply: false
+approvals:
+  tier2_domains_allow: ["github.com"]
+  tier3_actions: ["money_transfer"]
+reporting:
+  deliverables: ["RunBundle.zip","Summary.md"]

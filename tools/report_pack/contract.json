@@ -1,0 +1,8 @@
+{
+  "name": "report_pack",
+  "side_effects": "writes_local_files",
+  "policy_tags": [
+    "tier:a",
+    "low_risk"
+  ]
+}

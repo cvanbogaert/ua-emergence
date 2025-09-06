@@ -1,0 +1,8 @@
+{
+  "name": "code_exec",
+  "side_effects": "executes_code_in_sandbox",
+  "policy_tags": [
+    "tier:a",
+    "low_risk"
+  ]
+}
