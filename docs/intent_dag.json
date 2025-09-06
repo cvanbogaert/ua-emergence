@@ -1,0 +1,71 @@
+{
+  "version": "2025-09-06",
+  "root_intent": "UA Emergence: safe, incremental development via draft PR plan-only pipeline",
+  "children": [
+    {
+      "intent": "Tier A → B: PR-draft plan-only capability",
+      "children": [
+        {
+          "intent": "Local parity",
+          "actions": [
+            "Provide scripts/plan_only.sh (non-mutating) to generate plan.json + plan.log",
+            "Provide scripts/make_local_patch.sh to generate binary-safe changes.patch",
+            "Provide tools/pr_draft_comment.py to render comment.md"
+          ]
+        },
+        {
+          "intent": "CI integration",
+          "actions": [
+            "Workflow .github/workflows/pr-draft.yml triggers on Draft PR or labels plan-only/tier:B",
+            "Upload artifacts (plan.json, plan.log, changes.patch) and post/update PR comment"
+          ]
+        },
+        {
+          "intent": "Repo health + verification",
+          "actions": [
+            "One-paste verifiers emit structured JSON (intent_verification)",
+            "Record user prefs & learnings in .project/"
+          ]
+        }
+      ]
+    },
+    {
+      "intent": "Operational robustness",
+      "children": [
+        {
+          "intent": "Copy/paste-proof ops",
+          "actions": [
+            "Avoid huge heredocs; use small ordered steps",
+            "Never assume cwd/venv; use absolute paths and checks"
+          ]
+        },
+        {
+          "intent": "Auth & remotes",
+          "actions": [
+            "Prefer HTTPS PAT with workflow,repo scopes for pushing workflows",
+            "SSH acceptable; ensure correct repo slug without .git"
+          ]
+        }
+      ]
+    },
+    {
+      "intent": "Next tiering (B → C, sketch)",
+      "children": [
+        {
+          "intent": "Real planner wiring (still non-mutating)",
+          "actions": [
+            "Detect terraform/make; run terraform validate/plan -no-color or make -n plan",
+            "Summarize findings into plan.json (status: ok/degraded/fail)"
+          ]
+        },
+        {
+          "intent": "Config/Policy surface",
+          "actions": [
+            "Introduce config schema for tools/sources in policy/",
+            "Add policy checks to plan_only.sh (lint-only)"
+          ]
+        }
+      ]
+    }
+  ]
+}
