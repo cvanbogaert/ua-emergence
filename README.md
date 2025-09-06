@@ -17,3 +17,4 @@ This repository is a clean-room starter for a Universal Agent that emerges by re
 
 ---
 This seed is intentionally minimal and idempotent, with no external side-effects beyond local files in `./runs`.
+> sync marker 2025-09-06T21:40:27Z

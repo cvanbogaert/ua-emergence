@@ -1,0 +1,38 @@
+name: pr-draft (plan-only)
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review, labeled]
+    branches: [ "**" ]
+permissions:
+  contents: read
+  pull-requests: write
+  actions: read
+jobs:
+  plan_only:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.pull_request.draft || contains(github.event.pull_request.labels.*.name, 'tier:B') || contains(github.event.pull_request.labels.*.name, 'plan-only') }}
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - run: mkdir -p pr-draft
+      - run: bash scripts/plan_only.sh --out-json pr-draft/plan.json --out-log pr-draft/plan.log || true
+      - run: |
+          BASE="${{ github.event.pull_request.base.sha }}"; HEAD="${{ github.event.pull_request.head.sha }}"
+          git diff --binary --diff-algorithm=patience "$BASE" "$HEAD" > pr-draft/changes.patch || true
+          git diff --name-status "$BASE" "$HEAD" > pr-draft/changed-files.txt || true
+      - run: python3 tools/pr_draft_comment.py --changed pr-draft/changed-files.txt --plan-json pr-draft/plan.json --plan-log pr-draft/plan.log --out pr-draft/comment.md
+      - uses: actions/upload-artifact@v4
+        with: { name: pr-draft-${{ github.run_id }}, path: pr-draft/, if-no-files-found: warn, retention-days: 14 }
+      - id: fc
+        uses: peter-evans/find-comment@v3
+        with: { issue-number: ${{ github.event.pull_request.number }}, comment-author: github-actions[bot], body-includes: "<!-- pr-draft:marker -->" }
+      - uses: peter-evans/create-or-update-comment@v4
+        with:
+          comment-id: ${{ steps.fc.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            <!-- pr-draft:marker -->
+            $(cat pr-draft/comment.md)
+          edit-mode: replace

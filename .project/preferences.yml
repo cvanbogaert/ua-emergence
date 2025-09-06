@@ -1,0 +1,3 @@
+verify_intent_on_every_change: true
+structured_return_format: json
+roundtrip_copy_paste: true
